@@ -77,8 +77,12 @@
 
   <main>
     <section class="hero">
-      <div><div class="eyebrow">APPLE CONFIGURATION PROFILES</div><h1>Build your profile.<br /><span>Own every setting.</span></h1><p>Compose configuration payloads, inspect the generated property list, and export a profile ready for review and installation.</p></div>
-      <div class="hero-art"><div class="device"><div class="device-camera"></div><div class="device-screen"><div class="screen-icon">▤</div><b>Profile</b><small>Configuration</small><div class="screen-line"></div><div class="screen-line short"></div><div class="screen-check">✓</div></div></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div></div>
+      <div class="hero-copy">
+        <div class="eyebrow">CONFIGURATION PROFILES</div>
+        <h1>Profile editor</h1>
+        <p>Create and configure Apple device profiles. Your work stays in this browser until you export it.</p>
+      </div>
+      <div class="hero-status"><span class="status-led"></span> On this device</div>
     </section>
 
     <section class="workspace">
