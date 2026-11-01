@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { catalog, createPayload, profileObject, toPlist, uuid, type Payload, type PlistValue } from '$lib/profile';
 
   let meta = $state({ name: 'My Configuration', identifier: 'com.example.profile', organization: '', description: 'Generated with iOS Mobileconfig Gen Full', uuid: uuid(), removal: 'allowed' });
@@ -70,7 +71,7 @@
 
 <div class="app-shell">
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Mobileconfig Studio home"><span class="brand-icon">▤</span><span>Mobileconfig <b>Studio</b></span></a>
+    <a class="brand" href={base + '/'} aria-label="Mobileconfig Studio home"><span class="brand-icon">▤</span><span>Mobileconfig <b>Studio</b></span></a>
     <div class="top-actions"><span class="local-pill"><i></i> Runs locally</span><button class="quiet" onclick={exportJson}>Export project</button><label class="quiet import">Import project<input type="file" accept="application/json" onchange={importJson} /></label><button class="primary" onclick={download}>↓ Export .mobileconfig</button></div>
   </header>
 
