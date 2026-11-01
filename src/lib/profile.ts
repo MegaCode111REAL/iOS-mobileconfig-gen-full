@@ -1,4 +1,5 @@
-export type PlistValue = string | number | boolean | PlistValue[] | { [key: string]: PlistValue };
+export type PlistData = { __plistData: string };
+export type PlistValue = string | number | boolean | PlistData | PlistValue[] | { [key: string]: PlistValue };
 export type Payload = {
   id: string;
   type: string;
@@ -52,6 +53,7 @@ export function escapeXml(value: string) {
 function plistValue(value: PlistValue, depth = 0): string {
   const pad = '  '.repeat(depth);
   if (typeof value === 'boolean') return value ? '<true/>' : '<false/>';
+  if (typeof value === 'object' && value !== null && !Array.isArray(value) && '__plistData' in value) return '<data>' + String(value.__plistData).replace(/\\s+/g, '') + '</data>';
   if (typeof value === 'number') return Number.isInteger(value) ? `<integer>${value}</integer>` : `<real>${value}</real>`;
   if (typeof value === 'string') return `<string>${escapeXml(value)}</string>`;
   if (Array.isArray(value)) return '<array>\n' + value.map(v => pad + '  ' + plistValue(v, depth + 1)).join('\n') + '\n' + pad + '</array>';
@@ -63,10 +65,11 @@ export function toPlist(value: PlistValue) {
 export function profileObject(meta: { name: string; identifier: string; organization: string; description: string; uuid: string; removal: string }, payloads: Payload[]): PlistValue {
   const enabled = payloads.filter(p => p.enabled);
   return {
+    PayloadType: 'Configuration',
     PayloadContent: enabled.map(p => ({
       PayloadType: p.type, PayloadVersion: 1, PayloadIdentifier: meta.identifier + '.' + p.id,
       PayloadUUID: p.id, PayloadDisplayName: p.name, PayloadDescription: p.description,
-      ...p.values
+      ...Object.fromEntries(Object.entries(p.values).map(([key, value]) => [key, (key === 'PayloadContent' && (p.type === 'com.apple.security.root' || p.type === 'com.apple.credential') && typeof value === 'string') ? { __plistData: value.replace(/-----BEGIN [^-]+-----|-----END [^-]+-----/g, '').replace(/\\s+/g, '') } : value]))
     })),
     PayloadDisplayName: meta.name, PayloadIdentifier: meta.identifier, PayloadUUID: meta.uuid,
     PayloadVersion: 1, PayloadOrganization: meta.organization, PayloadDescription: meta.description,
